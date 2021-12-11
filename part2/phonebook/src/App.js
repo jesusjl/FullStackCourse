@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
-
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = () => {
 
@@ -9,13 +11,13 @@ const [persons, setPersons] = useState([
   { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
   { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
 ])
+
 const [newName, setNewName] = useState('')
 const [newPhone, setNewPhone] = useState('')
 const [filterNames, setFilterNames] = useState('')
 
 
 const addPerson = (event) => {
-  console.log(persons.filter((person) => person.name.startsWith('A')))
 
   event.preventDefault()
   if (persons.find(person => person.name === newName)){
@@ -48,28 +50,24 @@ const handleFilterByPersonChange = (event) => {
 
 const startsWithLetters = filterNames === ''
   ? persons
-  : persons.filter((person) => person.name.startsWith(filterNames))
+  : persons.filter((person) => person.name.toUpperCase().startsWith(filterNames.toUpperCase()))
 
   return (
     <div>
       <h2>Phonebook</h2>
-        filter show with
-        <input value={filterNames} onChange={handleFilterByPersonChange}/>
-        <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName}  onChange={handlePersonChange}/>
-        </div>
-        <div>number: <input value={newPhone}  onChange={handlePhoneChange} /></div>
-        <div>
-          <button type='submit'>Add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <ul>
-      {startsWithLetters.map( (person) => 
-        <li key={person.id}> {person.name} {person.phone} </li> )}
+        
+        <Filter value = {filterNames} onChange={handleFilterByPersonChange} />
+        <PersonForm onSubmit = {addPerson} 
+                    valueName={newName} 
+                    onChangePerson={handlePersonChange}
+                    valuePhone={newPhone}
+                    onChangePhone={handlePhoneChange} />
 
-      </ul>
+      <h2>Numbers</h2>
+    
+      {startsWithLetters.map((person) => 
+        <Persons key={person.id} name={person.name} phone={person.number} />)}
+
     </div>
   )
 }
