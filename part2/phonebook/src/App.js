@@ -72,7 +72,7 @@ const startsWithLetters = filterNames === ''
       <h2>Numbers</h2>
     
       {startsWithLetters.map((person) => 
-        <Persons key={person.id} name={person.name} phone={person.number} />)}
+        <Persons key={person.id} name={person.name} phone={person.phone} />)}
 
     </div>
   )
