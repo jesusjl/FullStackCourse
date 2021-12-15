@@ -24,10 +24,15 @@ const App=()=> {
     setFilterNames(event.target.value)
   }
 
+  const HandleShowCountryClick = (event) => {
+    setFilterNames(event.target.name)
+  }
+
+
   const startsWithLetters = filterNames === ''
   ? []
   : countries.filter((country) => country.name.common.toUpperCase().startsWith(filterNames.toUpperCase()))
-
+  console.log(startsWithLetters)
   useEffect(hook, [])
 
     return (
@@ -38,7 +43,7 @@ const App=()=> {
         <span>Too many matches</span>
         : startsWithLetters.length<=10 && startsWithLetters.length>1?
         startsWithLetters.map((country) => 
-        <Countries key={country.cca2} name={country.name.common} />)
+        <Countries value= {filterNames} onclick={HandleShowCountryClick} key={country.cca2} name={country.name.common} />)
         :startsWithLetters.map((country) => 
         <Country 
           key={country.cca2} 

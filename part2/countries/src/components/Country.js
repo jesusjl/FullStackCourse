@@ -1,7 +1,5 @@
 import React, {useState}  from "react"
 
-
-
 const Name=(props)=> {
     return(
         <h2>{props.name}</h2>
@@ -26,8 +24,8 @@ const Country = (props)  => {
         <>
         <Name name={props.name}/>
          <ul>
-         <li>capital {props.capital}</li>
-         <li>population {props.population}</li>
+            <li>capital {props.capital}</li>
+            <li>population {props.population}</li>
          </ul>
          <h3>Languages</h3>
          <Languages key={keyIncrement(x)} languages={props.languages} />
