@@ -1,38 +1,35 @@
-import React, {useState}  from "react"
+import React from 'react';
+import Weather from './Weather';
+const Name = (props) => <h2>{props.name}</h2>
 
-const Name=(props)=> {
-    return(
-        <h2>{props.name}</h2>
+const Capital = (props) => <div> capital {props.capital}<br /> population {props.population} </div>
+
+const Flag = (props) => <img src={props.flags.png}></img>
+
+const Languages = ({languages}) => {
+    return (
+        <div>
+            <h3>Spoken languages</h3>
+            <ul>{Object.keys(languages).map((item, i) => <li key={i}>{languages[item]}</li>)}</ul>
+        </div>
     )
 }
 
-const Flag=(props) => <img src={props.flags.png}></img>
-
-const Languages = (props) => {
-    return (
-        <>{Object.values(props.languages).map((k,v)=><li>{k}</li>)}</>
-    )
-  }
-
-const Country = (props)  => {
+const Country = (props) => {
 
     const x = 0
-    const keyIncrement = (x) => (x+1)
+    const keyIncrement = (x) => (x + 1);
 
-    console.log(props)
     return (
         <>
-        <Name name={props.name}/>
-         <ul>
-            <li>capital {props.capital}</li>
-            <li>population {props.population}</li>
-         </ul>
-         <h3>Languages</h3>
-         <Languages key={keyIncrement(x)} languages={props.languages} />
-         <Flag flags={props.flags} />
-         </>
+            <Name name={props.name} />
+            <Capital capital={props.capital} population={props.population} />
+            <Languages key={keyIncrement(x)} languages={props.languages} />
+            <Flag flags={props.flags} />
+            <Weather capital={props.capital}   />
+           
+        </>
     )
 }
 
 export default Country
-
