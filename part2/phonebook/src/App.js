@@ -1,81 +1,112 @@
 import React, {useState, useEffect} from 'react'
-import axios from 'axios'
 
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import phoneService from './services/Phones'
 
 const App = () => {
 
-const [persons, setPersons] = useState([])
-const [newName, setNewName] = useState('')
-const [newPhone, setNewPhone] = useState('')
-const [filterNames, setFilterNames] = useState('')
+  const [persons, setPersons] = useState([])
+  const [newName, setNewName] = useState('')
+  const [newPhone, setNewPhone] = useState('')
+  const [filterNames, setFilterNames] = useState('')
 
+  useEffect(()=> {
+    phoneService
+      .getAll()
+      .then(initialPhones=> {
+        setPersons(initialPhones)
+      })
+    }, [])
 
-const hook = () => {
-  axios
-    .get('http://localhost:3001/persons')
-    .then(response=> {
-      setPersons(response.data)
-    })
-}
+  const addUpdatePerson = (event) => {
 
-useEffect(hook, [])
+    event.preventDefault()
+    
+    if (persons.find(person => person.name === newName &  person.phone === newPhone)){
+      alert(`${newName} is already added to phonebook`)
+    } else if (persons.find(person => person.name === newName &  person.phone !== newPhone)) {
+        const person = persons.find(person => person.name === newName &  person.phone !== newPhone)
+        const response = window.confirm(`${person.name} is already added to the notebook, replace the old number with a new one?`)
+        if(response) {
+          const changedPersonPhone = { ...person, phone: newPhone }
 
-const addPerson = (event) => {
+          phoneService
+            .update(changedPersonPhone.id, changedPersonPhone)
+              .then(returnedPerson => {
+              setPersons(persons.map(person => person.id !== returnedPerson.id ? person : returnedPerson))
+            })
+            .catch(error => {
+              alert(
+                `the person '${changedPersonPhone.name}' was already deleted from server`
+              )
+              setPersons(persons.filter(n => n.id !== changedPersonPhone.id))
+            })
+        }
+      } else {
+      const personObject = {
+        name : newName,
+        phone: newPhone
+      }
 
-  event.preventDefault()
-  if (persons.find(person => person.name === newName)){
-    alert(`${newName} is already added to phonebook`)
-  } else{
-
-    const personObject = {
-      name : newName,
-      id: persons.length + 1,
-      phone: newPhone
+      phoneService
+        .create(personObject)
+        .then(returnedPhone => {
+          setPersons(persons.concat(returnedPhone))
+          setNewPhone('')
+          setNewName('')
+        })
     }
-
-    setPersons(persons.concat(personObject))
-    setNewName('')
-    
   }
-}
 
-const handlePersonChange = (event) => {
-  setNewName(event.target.value)
-}
+  const handleDeletePerson = (id) => {
+    const response = window.confirm("Are you sure?")
+    if(response) {
+      phoneService
+        .deletePerson(id)
+        .then(deletedPerson => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+    } 
+  }
 
-const handlePhoneChange = (event) => {
-  setNewPhone(event.target.value)
-}
+  
+  const handlePersonChange = (event) => {
+    setNewName(event.target.value)
+  }
 
-const handleFilterByPersonChange = (event) => {
-  setFilterNames(event.target.value)
-}
+  const handlePhoneChange = (event) => {
+    setNewPhone(event.target.value)
+  }
 
-const startsWithLetters = filterNames === ''
-  ? persons
-  : persons.filter((person) => person.name.toUpperCase().startsWith(filterNames.toUpperCase()))
+  const handleFilterByPersonChange = (event) => {
+    setFilterNames(event.target.value)
+  }
 
-  return (
-    <div>
-      <h2>Phonebook</h2>
-        
-        <Filter value = {filterNames} onChange={handleFilterByPersonChange} />
-        <PersonForm onSubmit = {addPerson} 
-                    valueName={newName} 
-                    onChangePerson={handlePersonChange}
-                    valuePhone={newPhone}
-                    onChangePhone={handlePhoneChange} />
 
-      <h2>Numbers</h2>
-    
-      {startsWithLetters.map((person) => 
-        <Persons key={person.id} name={person.name} phone={person.phone} />)}
 
-    </div>
-  )
+  const startsWithLetters = filterNames === ''
+    ? persons
+    : persons.filter((person) => person.name.toUpperCase().startsWith(filterNames.toUpperCase()))
+
+    return (
+      <div>
+        <h2>Phonebook</h2>
+          
+          <Filter value = {filterNames} onChange={handleFilterByPersonChange} />
+          <PersonForm onSubmit = {addUpdatePerson} 
+                      valueName={newName} 
+                      onChangePerson={handlePersonChange}
+                      valuePhone={newPhone}
+                      onChangePhone={handlePhoneChange} />
+
+        <h2>Numbers</h2>
+      
+        {startsWithLetters.map((person) => 
+          <Persons key={person.id} person={person} onClick={() => handleDeletePerson(person.id)}/>)}
+      </div>
+    )
 }
 
 
