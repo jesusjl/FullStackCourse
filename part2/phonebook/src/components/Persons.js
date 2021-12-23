@@ -4,7 +4,7 @@ const Persons = ({person, onClick}) => {
 
     return (
     <div>
-        {person.name} {person.phone} <button onClick={onClick}>delete</button>
+        {person.name} {person.number} <button onClick={onClick}>delete</button>
     </div>
     )
 }

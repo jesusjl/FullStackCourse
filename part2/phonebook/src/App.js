@@ -30,19 +30,19 @@ const App = () => {
 
     event.preventDefault()
     
-    if (persons.find(person => person.name === newName &  person.phone === newPhone)){
+    if (persons.find(person => person.name === newName &  person.number === newPhone)){
       alert(`${newName} is already added to phonebook`)
-    } else if (persons.find(person => person.name === newName &  person.phone !== newPhone)) {
-        const person = persons.find(person => person.name === newName &  person.phone !== newPhone)
+    } else if (persons.find(person => person.name === newName &  person.number !== newPhone)) {
+        const person = persons.find(person => person.name === newName &  person.number !== newPhone)
         const response = window.confirm(`${person.name} is already added to the notebook, replace the old number with a new one?`)
         if(response) {
-          const changedPersonPhone = { ...person, phone: newPhone }
+          const changedPersonPhone = { ...person, number: newPhone }
 
           phoneService
             .update(changedPersonPhone.id, changedPersonPhone)
             .then(returnedPerson => {
               setPersons(persons.map(person => person.id !== returnedPerson.id ? person : returnedPerson))
-              setSuccessMessage(`Updated '${changedPersonPhone.name}' phone to '${changedPersonPhone.phone}'`)
+              setSuccessMessage(`Updated '${changedPersonPhone.name}' phone to '${changedPersonPhone.number}'`)
               setTimeout(()=> {
                 setSuccessMessage(null)
               }, 5000)
@@ -58,7 +58,7 @@ const App = () => {
       } else {
       const personObject = {
         name : newName,
-        phone: newPhone
+        number: newPhone
       }
 
       phoneService
