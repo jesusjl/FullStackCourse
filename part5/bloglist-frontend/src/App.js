@@ -34,13 +34,12 @@ const App = () => {
     event.preventDefault()
     try {
       const user = await loginService.login({username, password})
-      setUser(user)
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
+      blogService.setToken(user.token)
+      setUser(user)
       setUserName('')
       setPassword('')
     } catch(exception) {
-
-     
       setMessage("wrong username or password")
       setClassMessage('error')
       setTimeout(()=> {
@@ -72,6 +71,12 @@ const App = () => {
       }, 5000)
     } catch(exception) {
       console.log(exception)
+      setMessage(`${exception.message}`)
+      setClassMessage('error')
+      setTimeout(()=>{
+        setMessage(null)
+        setClassMessage(null)
+      }, 5000)
     }
   }
 
@@ -124,8 +129,10 @@ const App = () => {
         <h2>blogs</h2>
         <LogoutForm user= {user.username} onClick={handleLogout}/>
         <h2>Create new</h2>
-       <BlogForm onChange={changeValue}  onSubmit={handleBlogForm} />
-        {blogs.map(blog =>  <Blog key={blog.id} blog={blog} />)}
+       <BlogForm  onChange={changeValue}  onSubmit={handleBlogForm} />
+        <div>
+        {blogs.map(blog => <Blog blog={blog} />)}
+        </div>
         </div>}
     </div>
   )
