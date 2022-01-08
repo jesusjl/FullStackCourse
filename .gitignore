@@ -26,3 +26,6 @@ yarn-error.log*
 misc/
 
 .env
+
+part3-heroku/
+node_modules
