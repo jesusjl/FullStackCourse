@@ -131,7 +131,7 @@ const App = () => {
         <h2>Create new</h2>
        <BlogForm  onChange={changeValue}  onSubmit={handleBlogForm} />
         <div>
-        {blogs.map(blog => <Blog blog={blog} />)}
+        {blogs.map((blog, id) => <Blog key={id} blog={blog} />)}
         </div>
         </div>}
     </div>
