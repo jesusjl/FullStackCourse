@@ -110,10 +110,8 @@ const App = () => {
       console.log(value)
       setUrl(value)
     }
-
   }
-
-
+  
   return (
     <div>
        <Notification message={message} class={classMessage}/>
@@ -129,7 +127,7 @@ const App = () => {
         <h2>blogs</h2>
         <LogoutForm user= {user.username} onClick={handleLogout}/>
         <h2>Create new</h2>
-       <BlogForm  onChange={changeValue}  onSubmit={handleBlogForm} />
+       <BlogForm  onChange={changeValue}  onSubmit={handleBlogForm} title={title} author={author} url={url}/>
         <div>
         {blogs.map((blog, id) => <Blog key={id} blog={blog} />)}
         </div>
