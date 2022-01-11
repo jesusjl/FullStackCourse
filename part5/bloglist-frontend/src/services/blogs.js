@@ -8,7 +8,11 @@ const setToken = newToken => {
 }
 
 const getAll =  async () => {
-  const response = await axios.get(baseUrl)
+  const config = {
+    headers: {Authorization: token},
+  }
+  const response = await axios.get(baseUrl, config)
+  response.data.sort((a,b) => (a.likes - b.likes)).reverse()
   return response.data
 }
 
@@ -20,4 +24,12 @@ const createBlogPost = async (newObject) => {
   return response.data
 }
 
-export default { getAll, createBlogPost, setToken }
+const updateLike = async (udpatedObject, id) => {
+  const config = {
+    headers: {Authorization: token},
+  }
+  const response = await axios.put(`${baseUrl}/${id}`, udpatedObject, config)
+  return response.data
+}
+
+export default { getAll, createBlogPost, updateLike, setToken }
