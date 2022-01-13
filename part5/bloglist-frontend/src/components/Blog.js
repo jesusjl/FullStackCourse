@@ -1,7 +1,6 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 
-const Blog = ({blog, updateBlog}) => {
-
+const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -12,7 +11,8 @@ const Blog = ({blog, updateBlog}) => {
 
   const [visible, setVisibility] = useState(false)
   const [label, setLabel] = useState('view')
-  const hideWhenVisible = {display: visible ? '' : 'none'}
+
+  const hideWhenVisible = { display: visible ? '' : 'none' }
 
   const toggleVisibility = () => {
     setVisibility(!visible)
@@ -21,19 +21,26 @@ const Blog = ({blog, updateBlog}) => {
 
   const addLike = (event) => {
     event.preventDefault()
-    updateBlog({...blog, "likes": blog.likes + 1 }, blog.id)
-    
+    updateBlog({ ...blog, 'likes': blog.likes + 1 }, blog.id)
+  }
+
+  const removePost = (event) => {
+    event.preventDefault()
+    if(window.confirm(`Remove blog ${blog.title}?`)) {
+      deleteBlog(blog.id)
+    }
   }
 
   return (
     <div style={blogStyle}>
       <div>
-        {blog.title} <button onClick={toggleVisibility}>{label}</button>
+        <div className='title'>{blog.title} <button className='' onClick={toggleVisibility}>{label}</button></div>
+        <div className='author'>  {blog.author}  </div>
       </div>
-      <div style={hideWhenVisible}>
-        <div> {blog.url}  </div>
-        <div>  likes {blog.likes} <button onClick={addLike}>like</button></div>
-        <div>  {blog.author}  </div>
+      <div className='togglableContent' style={hideWhenVisible}>
+        <div className='url'> {blog.url}  </div>
+        <div className='likes'>  likes {blog.likes} <button onClick={addLike}>like</button></div>
+        { Object.prototype.hasOwnProperty.call(blog,'user') && blog.user !== null ? (blog.user.username === user.username ?  <div> <button onClick={removePost}>remove</button></div>: 'fae'):''}
       </div>
     </div>
   )
