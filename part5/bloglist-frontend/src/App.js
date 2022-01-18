@@ -100,6 +100,7 @@ const App = () => {
   const removePost = async (id) => {
     try {
       const deletedBlog = await blogService.deleteBlog(id)
+      console.log(deletedBlog)
       setBlogs(blogs.filter(blog => blog.id !== id))
       /* setBlogs(blogs.map(blog => blog.id !== id ? blog : null)) */
       setMessage(`deleted blog ${deletedBlog.title} by ${deletedBlog.author}`)

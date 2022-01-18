@@ -39,8 +39,8 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
       </div>
       <div className='togglableContent' style={hideWhenVisible}>
         <div className='url'> {blog.url}  </div>
-        <div className='likes'>  likes {blog.likes} <button onClick={addLike}>like</button></div>
-        { Object.prototype.hasOwnProperty.call(blog,'user') && blog.user !== null ? (blog.user.username === user.username ?  <div> <button onClick={removePost}>remove</button></div>: 'fae'):''}
+        <div className='likes'>  likes {blog.likes} <button id='likeButton' onClick={addLike}>like</button></div>
+        { Object.prototype.hasOwnProperty.call(blog,'user') && blog.user !== null ? (blog.user.username === user.username ?  <div> <button id='removeButton' onClick={removePost}>remove</button></div>: 'fae'):''}
       </div>
     </div>
   )
